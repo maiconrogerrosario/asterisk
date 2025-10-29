@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  asterisk:
+    image: mlan/asterisk
+    container_name: asterisk
+    network_mode: host              # Usa rede do host (necessário para SIP/RTP)
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      - SYSLOG_LEVEL=4
+      - HOSTNAME=asterisk20.local
+    volumes:
+      - ./config:/etc/asterisk              # Configurações do Asterisk
+      - ./logs:/var/log/asterisk            # Logs do Asterisk
+      - ./recordings:/var/spool/asterisk/monitor  # Gravações (MixMonitor e afins)
+      - /etc/localtime:/etc/localtime:ro    # Sincroniza fuso horário
