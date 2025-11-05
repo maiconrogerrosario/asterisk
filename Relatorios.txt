@@ -1,0 +1,69 @@
+05/2025
+
+Concluídas
+
+Foram analisadas ferramentas para atuar como Session Border Controller (SBC) na integração e proteção do tráfego de voz. As opções incluem: Kamailio (roteamento SIP avançado), OpenSIPS (alta performance e escalabilidade), FreeSWITCH (manipulação de mídia e sinalização), Asterisk (PBX com funcionalidades de SBC), Amazon Chime SDK (integração WebRTC e SIP com a nuvem AWS) e AudioCodes (SBC comercial com suporte profissional).
+
+2
+
+06/2025
+
+Concluídas
+
+Este relatório dá continuidade à Macroatividade 1, aprofundando os estudos relacionados à integração entre os sistemas de captura de voz e os serviços da AWS. Nesta fase, foi investigada a utilização do AWS PrivateLink como meio seguro de interconexão entre VPCs e contas, foram analisadas topologias de rede viáveis para este tipo de integração, e foi desenvolvido um script Terraform para provisionamento automatizado da infraestrutura.
+
+3
+
+07/2025
+
+Concluídas
+
+Neste mês, foram escolhidas as ferramentas Kamailio e RTP Engine para compor a solução de transcrição em tempo real. Foi elaborado o diagrama inicial da arquitetura proposta, além da configuração do servidor e da instância EC2, onde ficará o sistema de captura de voz. As etapas iniciais de instalação e testes também foram iniciadas.
+
+4
+
+08/2025
+
+Concluídas
+
+O desenho da proposta inicial foi alterado. As atividades deste mês incluem ajustar as instâncias responsáveis por hospedar a aplicação. Inicialmente, as ferramentas básicas já começaram a ser implementadas neste serviço, incluindo o Kamailio e ferramentas para testes com o SIPp. Além disso, foram adicionadas camadas de segurança à aplicação. Também foram pesquisadas outras ferramentas, como NLB e Security Groups, para reforçar a segurança do NLB. Os repositórios das aplicações foram criados e organizados em módulos.
+
+5
+
+09/2025
+
+Concluídas
+
+Foram realizados testes iniciais com o Kamailio e o RTP Engine para captura de áudios em centrais de atendimento. Entretanto, além da complexidade de configuração dessas ferramentas, também surgiu o problema relacionado ao NAT (Network Address Translation). Esse cenário é mais difícil de ser tratado em aplicações de voz sobre IP, pois o tráfego de sinalização (SIP) e de mídia (RTP) precisa atravessar diferentes camadas de rede. Em muitos casos, o NAT oculta os endereços IP e portas utilizados, o que pode causar falhas no estabelecimento de chamadas, perda de áudio unidirecional ou até impossibilidade de comunicação entre os softphones.
+
+Diante dessas dificuldades, e considerando as restrições de segurança do banco, optou-se pela utilização do Asterisk, que além de ser um PBX completo, também pode atuar como SIP Trunk, permitindo a conexão direta com o SBC (Session Border Controller). Outro fator determinante para essa escolha é que o Asterisk possui uma configuração mais simples e rápida em comparação ao Kamailio, o que facilita os testes e acelera a integração.
+
+Nos testes iniciais com o Asterisk, já foi possível realizar a comunicação entre dois softphones simulando chamadas, utilizando MicroSIP e também um terminal WebRTC criado com a biblioteca SIP.js para realizar testes, bem como efetuar a gravação dessas chamadas. Também foi iniciado o estudo do módulo ARI (Asterisk REST Interface), que será utilizado para enviar os áudios das chamadas em tempo real para um transcritor.
+
+Devido às restrições do banco, os testes foram iniciados em computador pessoal para validação das configurações básicas. Após essa etapa inicial, a infraestrutura está sendo replicada e configurada na conta AWS do banco. Nesse ambiente, a utilização de subnets privadas e conexões internas aumenta a complexidade de configuração em aplicações como o Asterisk, principalmente devido à necessidade de tratar endereços internos, NAT e regras de roteamento para garantir a correta comunicação entre os componentes. Por requisitos de segurança definidos pelo banco, a aplicação será exposta apenas na Internet privada da conta onde está o servidor Asterisk.
+
+Além disso, foi realizada a configuração do Asterisk no módulo SIP Trunk para conexão ao serviço do banco por meio do SBC, componente responsável por controlar, proteger e intermediar o tráfego de voz e sinalização entre redes distintas. O SBC tem papel estratégico, pois atua como ponto central de entrada e saída de chamadas, recebendo tanto as chamadas originadas das diversas centrais do banco quanto aquelas provenientes de serviços WebRTC, garantindo interoperabilidade, segurança e roteamento adequado. A configuração do SIP Trunk depende de parâmetros fornecidos pelo time de telecom, como endereços IP, portas, credenciais de autenticação e regras de roteamento, garantindo que o Asterisk possa enviar e receber chamadas de forma segura e integrada com as demais centrais do banco e serviços WebRTC.
+
+Espera-se que, no próximo mês, essa configuração esteja totalmente concluída. No entanto, ela depende de ações de outras equipes além do time de pesquisa, o que pode impactar alguns prazos previstos.
+
+Foi enviada também ao time uma proposta de arquitetura mais comercial na AWS para captura de voz em tempo real, utilizando Amazon Chime Voice Connector como SIP Trunk, Amazon Kinesis, Amazon Transcribe e outros componentes para realizar a captura e transcrição de voz em tempo real.
+Aplicações de telefonia e VoIP são complexas; NAT e execução em Docker adicionam camadas de dificuldade na identificação e roteamento de IPs.
+
+O uso de subnets privadas na AWS aumenta a complexidade e impede testes diretos de softphones dentro do banco, pois depende do suporte do time de telecom para conectar e capturar chamadas do SBC e integrá-las ao Asterisk. Por isso, os testes continuam sendo realizados em computador pessoal.
+
+Avaliação de arquitetura alternativa com Amazon Chime Voice Connector, Kinesis e Transcribe foi realizada para etapas futuras de captura de voz em tempo real.
+6
+
+10/2025
+
+Concluídas
+
+Durante este mês foram realizadas experimentações com o Asterisk, um PBX de código aberto amplamente utilizado para o gerenciamento de comunicações de voz sobre IP (VoIP). O principal objetivo das atividades foi compreender o funcionamento interno do Asterisk e desenvolver uma arquitetura voltada para a transcrição de voz em tempo real, utilizando suas interfaces e APIs.
+
+Foram implementados testes de transmissão e captura de áudio utilizando um único terminal, integrando o Asterisk ARI (Asterisk REST Interface) com o Google Speech-to-Text, com o objetivo de realizar a transcrição de voz em tempo real. Para essa integração, foram utilizados os repositórios Asterisk External Media e Asterisk ARI, disponibilizados pela comunidade open source, que permitem o envio e recebimento de mídia através de fluxos RTP externos.
+
+Além disso, foram realizados experimentos práticos com o cliente MicroSIP, simulando ramais SIP e captura de áudio local, bem como testes com o Postman, utilizados para validar e monitorar as requisições HTTP das APIs ARI.
+
+Essas experimentações permitiram compreender detalhadamente o fluxo de chamadas, o gerenciamento de canais e bridges, e o processamento de mídia em tempo real dentro do Asterisk, consolidando as bases para futuras implementações de transcrição de voz em tempo real.
+
+Além disso, foram realizadas configurações dentro da instância disponibilizada pela empresa para conectar o Asterisk ao SBC da empresa, configurando-o como um SIP Trunk. Esses testes ainda estão em andamento, aguardando validação e liberação do lado time de telecomunicações.
