@@ -15,43 +15,53 @@ Este diretório contém um ambiente Docker para executar o Asterisk.
 
 Verifique:
 
+
+
 ```bash
 docker --version
 docker compose version
+```
+
+## 📥 Clone o repositório
 
 git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
 
-
+## 📁 Copie os arquivos para fora do repositório
 cp -r asterisk ~/asterisk-docker
 cd ~/asterisk-docker
 
+## ▶️ Execute o container
 
 docker compose up -d
 
+## Acesse o shell do container:
 
 docker compose exec -ti asterisk bash
 
+## Dentro do container, inicie o Asterisk:
+
 asterisk -rvvv
+
+Se tudo estiver certo, verá algo como:
 
 Asterisk Ready.
 
+## 📄 Arquivos principais de configuração
 
+| Arquivo           | Função                  |
+| ----------------- | ----------------------- |
+| `pjsip.conf`      | SIP / sinalização       |
+| `rtp.conf`        | Áudio RTP               |
+| `extensions.conf` | Lógica de chamadas      |
+| `modules.conf`    | Carregamento de módulos |
+| `http.conf`       | Servidor HTTP           |
+| `https.conf`      | HTTPS / TLS             |
+| `ari.conf`        | API REST (ARI)          |
 
-| Arquivo         | Função            |
-| --------------- | ----------------- |
-| pjsip.conf      | SIP / sinalização |
-| rtp.conf        | Áudio RTP         |
-| extensions.conf | Dialplan          |
-| modules.conf    | Módulos           |
-| http.conf       | HTTP              |
-| https.conf      | HTTPS             |
-| ari.conf        | API REST (ARI)    |
+## 📚 Documentação do Asterisk
 
+A documentação detalha a função e estrutura de cada um dos arquivos de configuração utilizados.
 
-# 📚 Documentação do Asterisk
-
-Esta pasta contém a documentação dos principais arquivos de configuração do Asterisk
-utilizados neste projeto.
 
 ## Arquivos documentados
 
@@ -62,5 +72,3 @@ utilizados neste projeto.
 - [http.conf](http.md)
 - [https.conf](https.md)
 - [ari.conf](ari.md)
-
-⬅️ [Voltar para o README principal](../README.md)
