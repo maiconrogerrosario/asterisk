@@ -1,74 +1,43 @@
-# 📞 Asterisk em Docker – Guia Rápido
+# LiveKit Full Stack local
 
-Este diretório contém um ambiente Docker para executar o Asterisk.
+Repositório único com Redis, LiveKit SFU, LiveKit SIP, agente OpenAI Realtime e página web.
 
-👉 Não é necessário instalar Asterisk no sistema.
+## Executar
 
----
-
-## ✅ Pré-requisitos
-
-- Git  
-- Docker  
-- Docker Compose  
-- Linux (usa network_mode: host)
-
-Verifique:
-
-
-
-```bash
-docker --version
-docker compose version
+```powershell
+Copy-Item .env.example .env
+notepad .env
+docker compose up --build -d
+docker compose ps
 ```
 
-## 📥 Clone o repositório
+Abra `http://localhost:8080` para testar pelo microfone.
 
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
+## Logs
 
-## 📁 Copie os arquivos para fora do repositório
-cp -r asterisk ~/asterisk-docker
-cd ~/asterisk-docker
+```powershell
+docker compose logs -f
+docker compose logs -f sip
+docker compose logs -f agent
+```
 
-## ▶️ Execute o container
+## Portas
 
-docker compose up -d
+- 8080/TCP: página web
+- 7880/TCP: LiveKit WebSocket/API
+- 7881/TCP: WebRTC por TCP
+- 50000-50100/UDP: mídia WebRTC
+- 5060/UDP e TCP: SIP
+- 10000-10100/UDP: RTP SIP
 
-## Acesse o shell do container:
+## Asterisk
 
-docker compose exec -ti asterisk bash
+Use os exemplos em `sip/pjsip-example.conf` e `sip/extensions-example.conf`. Troque os IPs pelos endereços reais. Antes de aceitar chamadas, cadastre o trunk e a dispatch rule usando os arquivos JSON em `sip/`.
 
-## Dentro do container, inicie o Asterisk:
+## Parar
 
-asterisk -rvvv
+```powershell
+docker compose down
+```
 
-Se tudo estiver certo, verá algo como:
-
-Asterisk Ready.
-
-## 📄 Arquivos principais de configuração
-
-| Arquivo           | Função                  |
-| ----------------- | ----------------------- |
-| `pjsip.conf`      | SIP / sinalização       |
-| `rtp.conf`        | Áudio RTP               |
-| `extensions.conf` | Lógica de chamadas      |
-| `modules.conf`    | Carregamento de módulos |
-| `http.conf`       | Servidor HTTP           |
-| `https.conf`      | HTTPS / TLS             |
-| `ari.conf`        | API REST (ARI)          |
-
-## 📚 Documentação do Asterisk
-
-A documentação detalha a função e estrutura de cada um dos arquivos de configuração utilizados.
-
-
-## Arquivos documentados
-
-- [pjsip.conf](pjsip.md)
-- [rtp.conf](rtp.md)
-- [extensions.conf](extensions.md)
-- [modules.conf](modules.md)
-- [http.conf](http.md)
-- [https.conf](https.md)
-- [ari.conf](ari.md)
+Para produção, configure domínio, TLS, `wss://`, IP público, firewall, TURN/TLS e credenciais fortes.
