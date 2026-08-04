@@ -3,5 +3,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
-COPY agent.py .
-CMD ["python", "agent.py", "start"]
+COPY app.py .
+COPY static ./static
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
